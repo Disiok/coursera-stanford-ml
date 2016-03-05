@@ -63,6 +63,7 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 
+% Part 1
 A1 = [ones(1, m); X'];
 Z2 = Theta1 * A1;
 A2 = sigmoid(Z2);
@@ -79,14 +80,21 @@ E = -Y .* log(H) - (1 - Y) .* log(1 - H);
 
 J = 1 / m * sum(sum(E));
 
+regularization = lambda / 2 / m * (sum(sum(Theta1(:,2:end) .^ 2)) + sum(sum(Theta2(:,2:end) .^ 2)));
 
+J = J + regularization;
 
+% Part 2
+D3 = H - Y;
+D2 = Theta2(:, 2:end)' * D3 .* sigmoidGradient(Z2);
+T2 = D3 * A2';
+T1 = D2 * A1';
 
+Theta1_grad = 1 / m * T1;
+Theta2_grad = 1 / m * T2;
 
-
-
-
-
+Theta1_grad(:, 2:end) = Theta1_grad(:, 2:end) + lambda / m * Theta1(:, 2:end);
+Theta2_grad(:, 2:end) = Theta2_grad(:, 2:end) + lambda / m * Theta2(:, 2:end);
 
 
 
